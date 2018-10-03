@@ -17,7 +17,7 @@ class Action(Enum):
 class VaccumEnvironment:
     def __init__(self, height = 3, width = 3):
         self.width = width
-        self.floor = nx.grid_2d_graph(height, width, periodic=False, create_using=None)
+        self.floor = nx.grid_2d_graph(height, width)
         # set random floor state values for all the nodes
         # tile = (location, data)
         for _, data in self.floor.nodes(data=True):
@@ -45,7 +45,7 @@ class SimpleReflexVaccumAgent:
         self.location = environment.get_random_location()
     
     def get_percept(self):
-        return [data['status'] for loc, data in self.environment.floor.nodes(data=True) if loc == self.location][0]
+        return self.environment.floor.nodes[location]['status']
     
     def decide_action(self, percept):
         if percept == FloorState.DIRTY:
@@ -82,7 +82,6 @@ class SimpleReflexVaccumAgent:
             self.perform_action(action)
 
             count += 1
-            
 
         
 def main():
