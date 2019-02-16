@@ -1,28 +1,77 @@
 from thing import Thing
+from utils import rule_match
+
+import random
+
+
+""""Base Agent"""
+
 
 class Agent(Thing):
-    """An Agent is a subclass of Thing with one required slot,
-    .program, which should hold a function that takes one argument, the
-    percept, and returns an action."""
-    def __init__(self, program=None):
-        self.performance = 0
+    def __init__(self, actions, location):
+        super().__init__(location)
+        self.actions = actions
 
-        if program is None or not isinstance(program, collections.Callable):
-            raise ValueError("Can't find a valid program for {}.".format(self.__class__.__name__))
+    def get_action(self, percept):
+        raise NotImplementedError
 
-        self.program = program
+    def interpret_input(self, percept):
+        return percept
 
 
-def TraceAgent(agent):
-    """Wrap the agent's program to print its input and output. This will let
-    you see what the agent is doing in the environment."""
-    old_program = agent.program
+""""Agent Structures"""
 
-    def new_program(percept):
-        action = old_program(percept)
-        print('{} perceives {} and does {}'.format(agent, percept, action))
+
+class RandomAgent(Agent):
+    def __init__(self, actions, location=None):
+        super().__init__(actions, location)
+
+    def get_action(self, _=None):
+        return random.choice(self.actions)
+
+
+class TableDrivenAgent(Agent):
+    def __init__(self, actions, table, location=None):
+        super().__init__(actions, location)
+        self.percept_history = []
+        self.table = table
+
+    def get_action(self, percept):
+        self.percept_history.append(percept)
+        action = self.table.get(tuple(self.percept_history))
         return action
 
-    agent.program = new_program
 
-    return agent
+class SimpleReflexAgent(Agent):
+    def __init__(self, actions, rules, location=None):
+        super().__init__(actions, location)
+        self.rules = rules
+
+    def get_action(self, percept):
+        state = self.interpret_input(percept)
+        rule = rule_match(state, self.rules)
+        action = rule.action
+        return action
+
+
+class ModelBasedReflexAgent(Agent):
+    def __init__(self, actions, rules, location=None):
+        super().__init__(actions, location)
+        self.rules = rules
+        self.state = None
+
+    def get_action(self, percept):
+        percept = self.interpret_input(percept)
+
+        rule = rule_match(self.state, self.rules)
+        action = rule.action
+
+        self.state = self.update_state(percept, action)
+
+        return action
+
+    def transition_model(self):
+        raise NotImplementedError
+
+    def update_state(self, percept, action):
+        raise NotImplementedError

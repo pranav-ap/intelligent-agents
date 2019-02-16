@@ -10,8 +10,22 @@ class FloorState(Enum):
 
 class Action(Enum):
     NONE = 0
-    MOVE = 1
-    CLEAN = 2
+    LEFT = 1
+    RIGHT = 2
+    CLEAN = 3
+
+
+class Facing(Enum):
+    U = 0
+    R = 1
+    D = 2
+    L = 3
+
+
+def rule_match(state, rules):
+    for rule in rules:
+        if rule.matches(state):
+            return rule
 
 
 class VacuumEnvironment:
