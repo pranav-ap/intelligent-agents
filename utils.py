@@ -20,6 +20,7 @@ class Facing(Enum):
     R = 1
     D = 2
     L = 3
+    NULL = 4
 
 
 def rule_match(state, rules):

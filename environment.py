@@ -47,11 +47,9 @@ class Environment:
 class Environment2D(Environment):
     def __init__(self, width=10, height=10):
         super().__init__()
-
         self.width = width
         self.height = height
-
-        self.grid = nx.grid_2d_graph(height, width)
+        self.env = nx.grid_2d_graph(height, width)
 
     def initialize_env(self):
         raise NotImplementedError
@@ -63,7 +61,18 @@ class Environment2D(Environment):
         raise NotImplementedError
 
     def get_neighbor_locations(self, location, radius=1):
-        pass
+        neighbor_locations = set(self.env.neighbors(location))
+        frontier = neighbor_locations
+
+        for i in range(radius - 1):
+            new_frontier = set()
+            for loc in frontier:
+                temp = list(self.env.neighbors(loc))
+                neighbor_locations.update(temp)
+                new_frontier.update(temp)
+            frontier = new_frontier
+
+        return neighbor_locations
 
     def get_things_at(self, location, kind=Thing):
         return [thing for thing in self.things if thing.location == location and isinstance(thing, kind)]
@@ -78,9 +87,9 @@ class Environment2D(Environment):
 
 
 class Agent2D:
-    def __init__(self, location, facing=None):
-        self.facing = facing
+    def __init__(self, location, facing=Facing.NULL):
         self.location = location
+        self.facing = facing
 
     def turn(self, turn_direction):
         value = (self.facing.value + turn_direction.value) % 4
