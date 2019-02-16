@@ -3,6 +3,15 @@ import networkx as nx
 import random
 
 
+class AgentStructure(Enum):
+    RandomAgent = 0
+    TableDrivenAgent = 1
+    SimpleReflexAgent = 2
+    ModelBasedReflexAgent = 3
+    GoalBasedAgent = 4
+    UtilityBasedAgent = 5
+
+
 class FloorState(Enum):
     CLEAN = 0
     DIRTY = 1
@@ -20,7 +29,7 @@ class Facing(Enum):
     R = 1
     D = 2
     L = 3
-    NULL = 4
+    NONE = 4
 
 
 def rule_match(state, rules):

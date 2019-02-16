@@ -1,5 +1,4 @@
 from thing import Thing
-from utils import Facing
 
 import networkx as nx
 
@@ -60,49 +59,14 @@ class Environment2D(Environment):
     def step(self):
         raise NotImplementedError
 
-    def get_neighbor_locations(self, location, radius=1):
-        neighbor_locations = set(self.env.neighbors(location))
-        frontier = neighbor_locations
+    def get_neighbor_locations(self, location: tuple, radius: int = 1):
+        return list(self.env.neighbors(location))
 
-        for i in range(radius - 1):
-            new_frontier = set()
-            for loc in frontier:
-                temp = list(self.env.neighbors(loc))
-                neighbor_locations.update(temp)
-                new_frontier.update(temp)
-            frontier = new_frontier
-
-        return neighbor_locations
-
-    def get_things_at(self, location, kind=Thing):
+    def get_things_at(self, location: tuple, kind=Thing):
         return [thing for thing in self.things if thing.location == location and isinstance(thing, kind)]
 
-    def get_things_near(self, location, radius=1, kind=Thing):
+    def get_things_near(self, location: tuple, radius=1, kind=Thing):
         return [(loc, thing)
                 for loc in self.get_neighbor_locations(location, radius)
                 for thing in self.get_things_at(location=loc, kind=kind)]
 
-    def percept(self, agent):
-        return self.get_things_near(agent.location) + self.get_things_at(agent.location)
-
-
-class Agent2D:
-    def __init__(self, location, facing=Facing.NULL):
-        self.location = location
-        self.facing = facing
-
-    def turn(self, turn_direction):
-        value = (self.facing.value + turn_direction.value) % 4
-        self.facing = Facing(value)
-
-    def move_forward(self):
-        x, y = self.facing
-
-        if self.facing == Facing.R:
-            self.location = (x + 1, y)
-        elif self.facing == Facing.L:
-            self.location = (x - 1, y)
-        elif self.facing == Facing.U:
-            self.location = (x, y + 1)
-        elif self.facing == Facing.D:
-            self.location = (x, y - 1)
