@@ -1,5 +1,6 @@
 from thing import Thing
-from utils import Facing, rule_match
+from utils import rule_match, AgentStructure
+from environments import Walker2D
 
 import random
 
@@ -18,33 +19,7 @@ class Agent(Thing):
         return percept
 
 
-class Walker2D:
-    def __init__(self, location: tuple, facing=Facing.NULL):
-        self.location = location
-        self.facing = facing
-
-    def turn(self, turn_direction):
-        value = (self.facing.value + turn_direction.value) % 4
-        self.facing = Facing(value)
-
-    def move_forward(self):
-        x, y = self.facing
-
-        if self.facing == Facing.R:
-            self.location = (x + 1, y)
-        elif self.facing == Facing.L:
-            self.location = (x - 1, y)
-        elif self.facing == Facing.U:
-            self.location = (x, y + 1)
-        elif self.facing == Facing.D:
-            self.location = (x, y - 1)
-
-
 """"Agent Structures"""
-
-
-def AgentFactory(agent_structure, dimensions):
-    pass
 
 
 class RandomAgent(Agent):
@@ -95,6 +70,29 @@ class ModelBasedReflexAgent(Agent):
 
         return action
 
+    def transition_model(self):
+        raise NotImplementedError
+
+    def update_state(self, percept, action):
+        raise NotImplementedError
+
+
+# Agents for 2D Environments
+
+
+class RandomAgent2D(RandomAgent, Walker2D):
+    pass
+
+
+class TableDrivenAgent2D(RandomAgent, Walker2D):
+    pass
+
+
+class SimpleReflexAgent2D(RandomAgent, Walker2D):
+    pass
+
+
+class ModelBasedReflexAgent2D(RandomAgent, Walker2D):
     def transition_model(self):
         raise NotImplementedError
 
