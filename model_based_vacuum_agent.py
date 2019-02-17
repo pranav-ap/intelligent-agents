@@ -1,4 +1,4 @@
-from utils import Action, FloorState, VacuumEnvironment
+from utils import Action, Floor, VacuumEnvironment
 import random
 
 # percept only shows current tile
@@ -17,11 +17,11 @@ class ModelBasedVacuumAgent:
     def get_percept(self):
         # get percepts from internal env
         percept = self.external_env.floor.nodes[self.location]['status']
-        return random.choice([percept, FloorState.CLEAN])
+        return random.choice([percept, Floor.CLEAN])
 
     def decide_action(self):
         # decide based on internal model
-        if self.env.floor.nodes[self.location]['status'] == FloorState.DIRTY:
+        if self.env.floor.nodes[self.location]['status'] == Floor.DIRTY:
             return Action.CLEAN
         return Action.MOVE
 
@@ -30,10 +30,10 @@ class ModelBasedVacuumAgent:
         self.location = random.choice(neighbor_locations)
 
     def clean(self):
-        self.env.floor.nodes[self.location]['status'] = FloorState.CLEAN
+        self.env.floor.nodes[self.location]['status'] = Floor.CLEAN
         # randomly clean the external tile to simulate a broken vaccum cleaner
         self.external_env.floor.nodes[self.location]['status'] = random.choice(
-            list(FloorState))
+            list(Floor))
 
     # perform action on both env
     def perform_action(self, action):

@@ -1,17 +1,21 @@
-from utils import Action, FloorState, VacuumEnvironment
+from utils import Action, Floor, Facing
+from agents import SimpleReflexAgent2D
+
 import random
 
 
-class SimpleReflexVacuumAgent:
-    def __init__(self, environment):
-        self.environment = environment
-        self.location = environment.get_random_location()
+class SimpleReflexVacuumAgent(SimpleReflexAgent2D):
+    def __init__(self, actions, rules, location=(0, 0), facing=Facing.NONE):
+        self.actions = actions
+        self.rules = rules
+        self.location = location
+        self.facing = facing
 
     def get_percept(self):
         return self.environment.floor.nodes[self.location]['status']
 
     def decide_action(self, percept):
-        if percept == FloorState.DIRTY:
+        if percept == Floor.DIRTY:
             return Action.CLEAN
         return Action.MOVE
 
@@ -21,7 +25,7 @@ class SimpleReflexVacuumAgent:
         self.location = random.choice(neighbor_locations)
 
     def clean(self):
-        self.environment.floor.nodes[self.location]['status'] = FloorState.CLEAN
+        self.environment.floor.nodes[self.location]['status'] = Floor.CLEAN
 
     def perform_action(self, action):
         if action == Action.CLEAN:

@@ -1,5 +1,6 @@
 from thing import Thing
 from utils import Facing
+from agents import Agent
 
 import networkx as nx
 
@@ -12,15 +13,14 @@ class Environment:
     def initialize_env(self):
         raise NotImplementedError
 
+    def display(self):
+        raise NotImplementedError
+
     def generate_percept(self, agent):
         raise NotImplementedError
 
-    def step(self):
-        raise NotImplementedError
-
     def run(self, steps=1000):
-        for step in range(steps):
-            self.step()
+        raise NotImplementedError
 
     def get_neighbor_locations(self, location, radius=1):
         raise NotImplementedError
@@ -29,6 +29,9 @@ class Environment:
         raise NotImplementedError
 
     def get_things_near(self, location, radius=1, kind=Thing):
+        raise NotImplementedError
+
+    def get_all_agents(self):
         raise NotImplementedError
 
     def add_thing(self, thing):
@@ -54,10 +57,13 @@ class Environment2D(Environment):
     def initialize_env(self):
         raise NotImplementedError
 
+    def display(self):
+        raise NotImplementedError
+
     def generate_percept(self, agent):
         raise NotImplementedError
 
-    def step(self):
+    def run(self, steps=1000):
         raise NotImplementedError
 
     def get_neighbor_locations(self, location: tuple, radius: int = 1):
@@ -70,6 +76,9 @@ class Environment2D(Environment):
         return [(loc, thing)
                 for loc in self.get_neighbor_locations(location, radius)
                 for thing in self.get_things_at(location=loc, kind=kind)]
+
+    def get_all_agents(self):
+        return [thing for thing in self.things if isinstance(thing, Agent)]
 
 
 # Walkers for the environment

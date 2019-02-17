@@ -1,5 +1,5 @@
 from thing import Thing
-from utils import rule_match, AgentStructure
+from utils import rule_match, Facing
 from environments import Walker2D
 
 import random
@@ -12,7 +12,7 @@ class Agent(Thing):
     def __init__(self, actions):
         self.actions = actions
 
-    def get_action(self, percept):
+    def action(self, percept):
         raise NotImplementedError
 
     def interpret_input(self, percept):
@@ -26,7 +26,7 @@ class RandomAgent(Agent):
     def __init__(self, actions):
         super().__init__(actions)
 
-    def get_action(self, _=None):
+    def action(self, _=None):
         return random.choice(self.actions)
 
 
@@ -36,7 +36,7 @@ class TableDrivenAgent(Agent):
         self.percept_history = []
         self.table = table
 
-    def get_action(self, percept):
+    def action(self, percept):
         self.percept_history.append(percept)
         action = self.table.get(tuple(self.percept_history))
         return action
@@ -47,7 +47,7 @@ class SimpleReflexAgent(Agent):
         super().__init__(actions)
         self.rules = rules
 
-    def get_action(self, percept):
+    def action(self, percept):
         state = self.interpret_input(percept)
         rule = rule_match(state, self.rules)
         action = rule.action
@@ -60,7 +60,7 @@ class ModelBasedReflexAgent(Agent):
         self.rules = rules
         self.state = None
 
-    def get_action(self, percept):
+    def action(self, percept):
         percept = self.interpret_input(percept)
 
         rule = rule_match(self.state, self.rules)
@@ -81,18 +81,28 @@ class ModelBasedReflexAgent(Agent):
 
 
 class RandomAgent2D(RandomAgent, Walker2D):
-    pass
+    def __init__(self, actions, location=(0, 0), facing=Facing.NONE):
+        RandomAgent.__init__(self, actions)
+        Walker2D.__init__(self, location, facing)
 
 
-class TableDrivenAgent2D(RandomAgent, Walker2D):
-    pass
+class TableDrivenAgent2D(TableDrivenAgent, Walker2D):
+    def __init__(self, actions, table, location=(0, 0), facing=Facing.NONE):
+        TableDrivenAgent.__init__(self, actions, table)
+        Walker2D.__init__(self, location, facing)
 
 
-class SimpleReflexAgent2D(RandomAgent, Walker2D):
-    pass
+class SimpleReflexAgent2D(SimpleReflexAgent, Walker2D):
+    def __init__(self, actions, rules, location=(0, 0), facing=Facing.NONE):
+        SimpleReflexAgent.__init__(self, actions, rules)
+        Walker2D.__init__(self, location, facing)
 
 
-class ModelBasedReflexAgent2D(RandomAgent, Walker2D):
+class ModelBasedReflexAgent2D(ModelBasedReflexAgent, Walker2D):
+    def __init__(self, actions, rules, location=(0, 0), facing=Facing.NONE):
+        ModelBasedReflexAgent.__init__(self, actions, rules)
+        Walker2D.__init__(self, location, facing)
+
     def transition_model(self):
         raise NotImplementedError
 
