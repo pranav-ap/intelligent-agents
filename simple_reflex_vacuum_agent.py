@@ -1,61 +1,57 @@
-from utils import Action, Floor, Facing
+from utils import Facing, Action, Floor
 from agents import SimpleReflexAgent2D
+from environments import Environment2D
 
 import random
 
 
+class VacuumEnvironment(Environment2D):
+    def __init__(self, width=3, height=3):
+        super().__init__(width=width, height=height)
+        self.initialize_env()
+
+    def initialize_env(self):
+        for _, data in self.env.nodes(data=True):
+            data['status'] = random.choice([Floor.Clean, Floor.Dirty])
+
+    def display(self):
+        i = 0
+        print('--- Floor ---', end='')
+        for node in self.env.nodes(data=True):
+            if i % self.width == 0:
+                print('\n')
+            print(node, end='\t')
+            i += 1
+
+    def generate_percept(self, agent):
+        return self.get_things_at(agent.location)
+
+    def run(self, steps=1000):
+        while not self.is_all_clean():
+            agents = self.get_all_agents()
+            for agent in agents:
+                percept = self.generate_percept(agent)
+                agent.action(percept)
+
+    def is_all_clean(self):
+        for _, data in self.env.nodes(data=True):
+            if data['status'] == Floor.DIRTY:
+                return False
+        return True
+
+
 class SimpleReflexVacuumAgent(SimpleReflexAgent2D):
     def __init__(self, actions, rules, location=(0, 0), facing=Facing.NONE):
-        self.actions = actions
-        self.rules = rules
-        self.location = location
-        self.facing = facing
-
-    def get_percept(self):
-        return self.environment.floor.nodes[self.location]['status']
-
-    def decide_action(self, percept):
-        if percept == Floor.DIRTY:
-            return Action.CLEAN
-        return Action.MOVE
-
-    def move(self):
-        neighbor_locations = self.environment.get_neighbor_locations(
-            self.location)
-        self.location = random.choice(neighbor_locations)
-
-    def clean(self):
-        self.environment.floor.nodes[self.location]['status'] = Floor.CLEAN
-
-    def perform_action(self, action):
-        if action == Action.CLEAN:
-            self.clean()
-        elif action == Action.MOVE:
-            self.move()
-
-    def run(self, limit=10):
-        count = 0
-
-        print('Initial no of dirty tiles : ' +
-              str(self.environment.get_number_of_dirty_tiles()))
-
-        while count < limit:
-            percept = self.get_percept()
-            action = self.decide_action(percept)
-            self.perform_action(action)
-
-            count += 1
-
-        print('Final no of dirty tiles : ' +
-              str(self.environment.get_number_of_dirty_tiles()))
+        SimpleReflexAgent2D.__init__(actions, rules, location, facing)
 
 
 def main():
-    env = VacuumEnvironment(height=5, width=5)
-    agent = SimpleReflexVacuumAgent(environment=env)
+    actions = list([Action.NONE, Action.CLEAN, Action.LEFT, Action.RIGHT])
+    rules = []
 
-    agent.run()
+    agent = SimpleReflexVacuumAgent(actions, rules)
+    env = VacuumEnvironment(width=2, height=1)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
