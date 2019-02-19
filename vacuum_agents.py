@@ -1,4 +1,4 @@
-from agents import RandomAgent
+from lib.agent_structures import RandomAgent
 
 loc_A, loc_B = (0, 0), (1, 0)  # The two locations for the Vacuum world
 agent_loc = 'agent_loc'
@@ -23,17 +23,6 @@ def TableDrivenVacuumAgent():
              }
 
     return Agent(TableDrivenAgentProgram(table))
-
-
-def SimpleReflexVacuumAgent():
-    rules = [
-        {'state': (loc_A, 'Dirty'), 'action': 'Suck'},
-        {'state': (loc_B, 'Dirty'), 'action': 'Suck'},
-        {'state': (loc_A, 'Clean'), 'action': 'Right'},
-        {'state': (loc_B, 'Clean'), 'action': 'Left'}
-    ]
-
-    return Agent(SimpleReflexAgentProgram(rules, lambda percept: percept))
 
 
 def ModelBasedReflexVacuumAgent():

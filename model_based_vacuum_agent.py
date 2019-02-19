@@ -1,4 +1,4 @@
-from utils import Action, Floor, VacuumEnvironment
+from lib.utils import Action, Floor, VacuumEnvironment
 import random
 
 # percept only shows current tile
