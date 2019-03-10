@@ -1,10 +1,22 @@
 from lib.agents_2d import SimpleReflexAgent2D
 from lib.environments import Environment2D, Dirt
-from lib.utils import Facing, Action, Floor
 
 
 loc_A, loc_B = (0, 0), (0, 1)  # The two locations for the Vacuum world
 
+
+# class Action(Enum):
+#     NONE = 0
+#     LEFT = 1
+#     RIGHT = 2
+#     CLEAN = 3
+#
+# class Facing(Enum):
+#     U = 0
+#     R = 1
+#     D = 2
+#     L = 3
+#     NONE = 4
 
 class VacuumEnvironment(Environment2D):
     def __init__(self, width=3, height=3):
