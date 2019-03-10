@@ -1,5 +1,5 @@
-from lib.agents_2d import SimpleReflexAgent2D
-from lib.environments import Environment2D, Dirt
+from core.agents_2d import SimpleReflexAgent2D
+from core.environments import Environment2D, Dirt
 
 
 loc_A, loc_B = (0, 0), (0, 1)  # The two locations for the Vacuum world
