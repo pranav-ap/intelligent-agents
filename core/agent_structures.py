@@ -24,5 +24,13 @@ class RandomAgent(Agent):
     def __init__(self, actions):
         Agent.__init__(self, actions)
 
-    def decide_action(self, _=None):
+    def decide_action(self, _):
         return choice(self.actions)
+
+
+class SimpleReflexAgent(Agent):
+    def __init__(self, actions):
+        Agent.__init__(self, actions)
+
+    def decide_action(self, percept):
+        raise NotImplementedError

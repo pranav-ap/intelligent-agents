@@ -39,7 +39,7 @@ class TrivialVacuumEnvironment2D(VacuumEnvironment2D):
                 percept = self._get_things_at(agent.location)
                 action = agent.decide_action(percept)
                 self._perform_action(agent, action)
-                print(str(agent) + ' performs ' + str(action))
+                print('{} performs {}'.format(agent, action))
 
             step += 1
 
