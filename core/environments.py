@@ -1,6 +1,4 @@
 from core.things import Thing
-from core.agent_structures import Agent
-
 import networkx as nx
 
 
@@ -9,28 +7,28 @@ class Environment:
         self.things = []
         self.env = []
 
-    def initialize_env(self):
+    def _initialize_env(self):
         raise NotImplementedError
 
     def display(self):
         raise NotImplementedError
 
-    def perform_action(self, agent, action):
+    def _perform_action(self, agent, action):
         raise NotImplementedError
 
-    def run(self, steps=1000):
-        raise NotImplementedError
+    def _get_things_at(self, location: tuple, kind=Thing):
+        return [thing for thing in self.things if thing.location == location and isinstance(thing, kind)]
 
-    def get_neighbor_locations(self, location):
-        raise NotImplementedError
+    def _get_all_things(self, kind=Thing):
+        return [thing for thing in self.things if isinstance(thing, kind)]
 
-    def get_things_at(self, location, kind=Thing):
-        raise NotImplementedError
-
-    def get_things_around(self, location, kind=Thing):
-        raise NotImplementedError
-
-    def get_all_agents(self):
+    def step(self):
+        """
+        For each agent in the environment
+            provide a percept
+            get action decision
+            perform the action
+        """
         raise NotImplementedError
 
     def add_thing(self, thing, location=None):
@@ -48,35 +46,25 @@ class Environment:
 
 
 class Environment2D(Environment):
-    def __init__(self, height=10, width=10):
+    def __init__(self, height=3, width=3):
         super().__init__()
+        self.height = height
+        self.width = width
         self.env = nx.grid_2d_graph(height, width)
 
-    def initialize_env(self):
+    def _initialize_env(self):
         raise NotImplementedError
 
     def display(self):
+        i = 0
+        for node in self.env.nodes(data=True):
+            if i % self.width == 0:
+                print('\n')
+            print(node, end='\t')
+            i += 1
+
+    def _perform_action(self, agent, action):
         raise NotImplementedError
 
-    def generate_percept(self, agent):
+    def step(self):
         raise NotImplementedError
-
-    def perform_action(self, agent, action):
-        raise NotImplementedError
-
-    def run(self, steps=1000):
-        raise NotImplementedError
-
-    def get_neighbor_locations(self, location: tuple):
-        return list(self.env.neighbors(location))
-
-    def get_things_at(self, location: tuple, kind=Thing):
-        return [thing for thing in self.things if thing.location == location and isinstance(thing, kind)]
-
-    def get_things_around(self, location: tuple, kind=Thing):
-        return [(loc, thing)
-                for loc in self.get_neighbor_locations(location)
-                for thing in self.get_things_at(location=loc, kind=kind)]
-
-    def get_all_agents(self):
-        return [thing for thing in self.things if isinstance(thing, Agent)]

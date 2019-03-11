@@ -1,26 +1,43 @@
-from core.utils import Facing
+from enum import Enum
 
 
-""" Walkers for the environment """
+class Direction(Enum):
+    FRONT = 0
+    RIGHT = 1
+    BACK = 2
+    LEFT = 3
+    CURRENT = 4
+    NONE = 5
 
 
-class Walker2D:
-    def __init__(self, location: tuple, facing=Facing.NONE):
+""" 
+Walkers for the environment 
+---------------------------
+This class handles the location data and navigation actions for an agent.
+
+"""
+
+
+class Walker:
+    def __init__(self, location: tuple):
         self.location = location
-        self.facing = facing
 
-    def turn(self, turn_direction):
-        value = (self.facing.value + turn_direction.value) % 4
-        self.facing = Facing(value)
+    def move(self, direction: Direction, env_width, env_height) -> None:
+        raise NotImplementedError
 
-    def move_forward(self):
-        x, y = self.facing
 
-        if self.facing == Facing.R:
-            self.location = (x + 1, y)
-        elif self.facing == Facing.L:
-            self.location = (x - 1, y)
-        elif self.facing == Facing.U:
-            self.location = (x, y + 1)
-        elif self.facing == Facing.D:
-            self.location = (x, y - 1)
+class Walker2D(Walker):
+    def __init__(self, location: tuple):
+        Walker.__init__(self, location=location)
+
+    def move(self, direction: Direction, env_width, env_height) -> None:
+        x, y = self.location
+
+        if direction == Direction.EAST and y + 1 < env_width:
+            self.location = x, y + 1
+        elif direction == Direction.WEST and y - 1 >= 0:
+            self.location = x, y - 1
+        elif direction == Direction.NORTH and x - 1 <= 0:
+            self.location = x - 1, y
+        elif direction == Direction.SOUTH and x + 1 > env_height:
+            self.location = x + 1, y
