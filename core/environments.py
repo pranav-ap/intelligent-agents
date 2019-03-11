@@ -51,10 +51,10 @@ class Environment2D(Environment):
 
     def display(self):
         i = 0
-        for node in self.env.nodes(data=True):
+        for node in self.env.nodes():
             if i % self.width == 0:
                 print('\n')
-            print(node, end='\t')
+            print(str(node) + str(self._get_things_at(node)), end='\t')
             i += 1
 
     def _perform_action(self, agent, action):

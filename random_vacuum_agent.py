@@ -4,19 +4,26 @@ from enum import Enum
 
 class Action(Enum):
     NONE = 0
-    FRONT = 0
-    RIGHT = 1
-    BACK = 2
-    LEFT = 3
-    CLEAN = 3
+    FRONT = 1
+    RIGHT = 2
+    BACK = 3
+    LEFT = 4
+    CLEAN = 5
 
 
 class RandomVacuumAgent2D(RandomAgent2D):
     def __init__(self, actions, location=(0, 0)):
         RandomAgent2D.__init__(self, actions, location)
 
+    def __repr__(self):
+        return 'RandomVacuumAgent2D'
+
 
 class TrivialEnvironment2D(Environment2D):
+    def __init__(self, height=3, width=3):
+        Environment2D.__init__(self, height=height, width=width)
+        self._initialize_env()
+
     def _initialize_env(self):
         self.add_thing(Dirt(), (0, 0))
 
@@ -36,22 +43,26 @@ class TrivialEnvironment2D(Environment2D):
 
     def run(self, steps=20):
         while not self._is_all_clean():
+            self.display()
             for agent in self._get_all_things(kind=Agent):
                 percept = self._get_things_at(agent.location)
                 action = agent.decide_action(percept)
+                print(action)
                 self._perform_action(agent, action)
+
+        self.display()
 
     def _is_all_clean(self):
         return all(not isinstance(thing, Dirt) for thing in self.things)
 
 
 def main():
-    actions = [Action.NONE, Action.LEFT, Action.RIGHT, Action.CLEAN, Action.FRONT, Action.BACK]
+    actions = [Action.LEFT, Action.RIGHT, Action.CLEAN]
     agent = RandomVacuumAgent2D(actions=actions)
 
-    env = TrivialEnvironment2D()
+    env = TrivialEnvironment2D(height=1, width=2)
     env.add_thing(agent, (0, 1))
-    env.run()
+    env.run(steps=5)
 
 
 if __name__ == '__main__':

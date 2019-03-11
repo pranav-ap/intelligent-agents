@@ -32,11 +32,11 @@ class Walker2D(Walker):
     def move(self, direction: Direction, env_height, env_width) -> None:
         x, y = self.location
 
-        if direction == Direction.EAST and y + 1 < env_width:
-            self.location = x, y + 1
-        elif direction == Direction.WEST and y - 1 >= 0:
-            self.location = x, y - 1
-        elif direction == Direction.NORTH and x - 1 <= 0:
-            self.location = x - 1, y
-        elif direction == Direction.SOUTH and x + 1 > env_height:
-            self.location = x + 1, y
+        if direction == Direction.RIGHT and y + 1 < env_width:
+            self.location = (x, y + 1)
+        elif direction == Direction.LEFT and y - 1 >= 0:
+            self.location = (x, y - 1)
+        elif direction == Direction.FRONT and x - 1 <= 0:
+            self.location = (x - 1, y)
+        elif direction == Direction.BACK and x + 1 > env_height:
+            self.location = (x + 1, y)
