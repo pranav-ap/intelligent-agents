@@ -3,9 +3,10 @@ class Thing:
 
 
 class Dirt(Thing):
-    pass
+    def __init__(self, location=(0, 0)):
+        self.location = location
 
 
 class Wall(Thing):
-    pass
-
+    def __init__(self, location=(0, 0)):
+        self.location = location

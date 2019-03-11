@@ -31,7 +31,7 @@ class TrivialEnvironment2D(Environment2D):
             agent.move(Direction.BACK, self.height, self.width)
         elif action == Action.CLEAN:
             for thing in self.things:
-                if type(thing) == Dirt and thing.location == agent.location:
+                if isinstance(thing, Dirt) and thing.location == agent.location:
                     self.delete_thing(thing)
 
     def run(self, steps=20):
@@ -42,7 +42,7 @@ class TrivialEnvironment2D(Environment2D):
                 self._perform_action(agent, action)
 
     def _is_all_clean(self):
-        return all(type(thing) != Dirt for thing in self.things)
+        return all(not isinstance(thing, Dirt) for thing in self.things)
 
 
 def main():

@@ -10,11 +10,10 @@ class Direction(Enum):
     NONE = 5
 
 
-""" 
+"""
 Walkers for the environment 
 ---------------------------
 This class handles the location data and navigation actions for an agent.
-
 """
 
 
@@ -22,7 +21,7 @@ class Walker:
     def __init__(self, location: tuple):
         self.location = location
 
-    def move(self, direction: Direction, env_width, env_height) -> None:
+    def move(self, direction: Direction, env_height, env_width) -> None:
         raise NotImplementedError
 
 
