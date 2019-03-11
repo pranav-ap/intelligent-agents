@@ -1,17 +1,19 @@
-from core import RandomAgent2D, Environment2D, Facing, Dirt
+from core import RandomAgent2D, Environment2D, Dirt, Direction, Agent
 from enum import Enum
 
 
 class Action(Enum):
     NONE = 0
-    LEFT = 1
-    RIGHT = 2
+    FRONT = 0
+    RIGHT = 1
+    BACK = 2
+    LEFT = 3
     CLEAN = 3
 
 
 class RandomVacuumAgent2D(RandomAgent2D):
-    def __init__(self, actions, location=(0, 0), facing=Facing.NONE):
-        RandomAgent2D.__init__(self, actions, location, facing)
+    def __init__(self, actions, location=(0, 0)):
+        RandomAgent2D.__init__(self, actions, location)
 
 
 class TrivialEnvironment2D(Environment2D):
@@ -20,35 +22,36 @@ class TrivialEnvironment2D(Environment2D):
 
     def _perform_action(self, agent, action):
         if action == Action.LEFT:
-            agent.location = loc_A
+            agent.move(Direction.LEFT, self.height, self.width)
         elif action == Action.RIGHT:
-            agent.location = loc_B
+            agent.move(Direction.RIGHT, self.height, self.width)
+        elif action == Action.FRONT:
+            agent.move(Direction.FRONT, self.height, self.width)
+        elif action == Action.BACK:
+            agent.move(Direction.BACK, self.height, self.width)
         elif action == Action.CLEAN:
             for thing in self.things:
                 if type(thing) == Dirt and thing.location == agent.location:
                     self.delete_thing(thing)
 
-    def step(self):
-        while not self.is_all_clean():
-            agents = self.get_all_agents()
-            for agent in agents:
-                percept = self._get_things_at(agent.lcation)
+    def run(self, steps=20):
+        while not self._is_all_clean():
+            for agent in self._get_all_things(kind=Agent):
+                percept = self._get_things_at(agent.location)
                 action = agent.decide_action(percept)
                 self._perform_action(agent, action)
 
-    def is_all_clean(self):
-        if all(type(thing) != Dirt for thing in self.things):
-            return True
-        return False
+    def _is_all_clean(self):
+        return all(type(thing) != Dirt for thing in self.things)
 
 
 def main():
-    actions = [Action.NONE, Action.LEFT, Action.RIGHT, Action.CLEAN]
+    actions = [Action.NONE, Action.LEFT, Action.RIGHT, Action.CLEAN, Action.FRONT, Action.BACK]
     agent = RandomVacuumAgent2D(actions=actions)
 
     env = TrivialEnvironment2D()
     env.add_thing(agent, (0, 1))
-    env.step()
+    env.run()
 
 
 if __name__ == '__main__':

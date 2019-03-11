@@ -30,7 +30,7 @@ class Walker2D(Walker):
     def __init__(self, location: tuple):
         Walker.__init__(self, location=location)
 
-    def move(self, direction: Direction, env_width, env_height) -> None:
+    def move(self, direction: Direction, env_height, env_width) -> None:
         x, y = self.location
 
         if direction == Direction.EAST and y + 1 < env_width:

@@ -22,13 +22,7 @@ class Environment:
     def _get_all_things(self, kind=Thing):
         return [thing for thing in self.things if isinstance(thing, kind)]
 
-    def step(self):
-        """
-        For each agent in the environment
-            provide a percept
-            get action decision
-            perform the action
-        """
+    def run(self, steps=20):
         raise NotImplementedError
 
     def add_thing(self, thing, location=None):
@@ -66,5 +60,5 @@ class Environment2D(Environment):
     def _perform_action(self, agent, action):
         raise NotImplementedError
 
-    def step(self):
+    def run(self, steps=20):
         raise NotImplementedError
