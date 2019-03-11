@@ -7,9 +7,6 @@ class Environment:
         self.things = []
         self.env = []
 
-    def _initialize_env(self):
-        raise NotImplementedError
-
     def display(self):
         raise NotImplementedError
 
@@ -22,7 +19,7 @@ class Environment:
     def _get_all_things(self, kind=Thing):
         return [thing for thing in self.things if isinstance(thing, kind)]
 
-    def run(self, steps=20):
+    def run(self, max_steps=20):
         raise NotImplementedError
 
     def add_thing(self, thing, location=None):
@@ -46,9 +43,6 @@ class Environment2D(Environment):
         self.width = width
         self.env = nx.grid_2d_graph(height, width)
 
-    def _initialize_env(self):
-        raise NotImplementedError
-
     def display(self):
         i = 0
         for node in self.env.nodes():
@@ -60,5 +54,5 @@ class Environment2D(Environment):
     def _perform_action(self, agent, action):
         raise NotImplementedError
 
-    def run(self, steps=20):
+    def run(self, max_steps=20):
         raise NotImplementedError
