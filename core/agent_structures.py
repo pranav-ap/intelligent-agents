@@ -34,3 +34,16 @@ class SimpleReflexAgent(Agent):
 
     def decide_action(self, percept):
         raise NotImplementedError
+
+
+class ModelBasedReflexAgent(Agent):
+    def __init__(self, actions):
+        Agent.__init__(self, actions)
+        self.state = None
+
+    def decide_action(self, percept):
+        raise NotImplementedError
+
+    def _update_state(self, percept, action):
+        """next state -> current state + action"""
+        raise NotImplementedError

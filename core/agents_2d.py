@@ -1,4 +1,4 @@
-from core.agent_structures import RandomAgent, SimpleReflexAgent
+from core.agent_structures import RandomAgent, SimpleReflexAgent, ModelBasedReflexAgent
 from core.walkers import Walker2D
 
 
@@ -14,4 +14,12 @@ class SimpleReflexAgent2D(SimpleReflexAgent, Walker2D):
         Walker2D.__init__(self, location)
 
     def decide_action(self, percept):
+        raise NotImplementedError
+
+
+class ModelBasedReflexAgent2D(ModelBasedReflexAgent, Walker2D):
+    def decide_action(self, percept):
+        raise NotImplementedError
+
+    def _update_state(self, percept, action):
         raise NotImplementedError
