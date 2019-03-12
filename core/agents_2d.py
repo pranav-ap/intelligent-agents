@@ -18,6 +18,14 @@ class SimpleReflexAgent2D(SimpleReflexAgent, Walker2D):
 
 
 class ModelBasedReflexAgent2D(ModelBasedReflexAgent, Walker2D):
+    def __init__(self, actions, location=(0, 0)):
+        ModelBasedReflexAgent.__init__(self, actions)
+        Walker2D.__init__(self, location)
+        self.env = None
+
+    def initialize_internal_env(self, env):
+        self.env = env
+
     def decide_action(self, percept):
         raise NotImplementedError
 

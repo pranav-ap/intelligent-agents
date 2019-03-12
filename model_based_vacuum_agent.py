@@ -29,6 +29,8 @@ class ModelBasedReflexVacuumAgent2D(ModelBasedReflexAgent2D):
 def main():
     actions = [Action.LEFT, Action.RIGHT, Action.CLEAN]
     agent = ModelBasedReflexVacuumAgent2D(actions=actions)
+    internal_env = TrivialVacuumEnvironment2D(height=1, width=2)
+    agent.initialize_internal_env(internal_env)
 
     env = TrivialVacuumEnvironment2D(height=1, width=2)
     env.add_thing(agent, (0, 1))
