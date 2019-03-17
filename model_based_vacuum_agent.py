@@ -10,7 +10,9 @@ class ModelBasedReflexVacuumAgent2D(ModelBasedReflexAgent2D):
         ModelBasedReflexAgent2D.__init__(self, actions, location)
 
     def decide_action(self, percept):
-        if any(isinstance(thing, Dirt) for thing in percept):
+        self._update_state(percept)
+
+        if any(isinstance(thing, Dirt) for thing in self.env._get_things_at(self.location)):
             return Action.CLEAN
         elif self.location == (0, 0):
             return Action.RIGHT
@@ -19,8 +21,12 @@ class ModelBasedReflexVacuumAgent2D(ModelBasedReflexAgent2D):
         else:
             return choice([Action.LEFT, Action.RIGHT])
 
-    def _update_state(self, percept, action):
-        pass
+    def _update_state(self, percept):
+        things = self.env._get_all_things()
+        filter(lambda thing: thing.location != self.location, things)
+
+        for thing in percept:
+            self.env.add_thing(thing, thing.location)
 
     def __repr__(self):
         return 'ModelBasedReflexVacuumAgent2D'

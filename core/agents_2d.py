@@ -29,5 +29,5 @@ class ModelBasedReflexAgent2D(ModelBasedReflexAgent, Walker2D):
     def decide_action(self, percept):
         raise NotImplementedError
 
-    def _update_state(self, percept, action):
+    def _update_state(self, percept):
         raise NotImplementedError
