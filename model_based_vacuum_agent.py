@@ -1,5 +1,7 @@
 from core import ModelBasedReflexAgent2D, Dirt
-from vacuum_environments import TrivialVacuumEnvironment2D
+from vacuum_environments import (
+    TrivialVacuumEnvironment2D,
+    PartiallyObservableTrivialVacuumEnvironment2D)
 from utils import Action
 
 from random import choice
@@ -26,7 +28,8 @@ class ModelBasedReflexVacuumAgent2D(ModelBasedReflexAgent2D):
         filter(lambda thing: thing.location != self.location, things)
 
         for thing in percept:
-            self.env.add_thing(thing, thing.location)
+            if thing not in self.env.things:
+                self.env.add_thing(thing, thing.location)
 
     def __repr__(self):
         return 'ModelBasedReflexVacuumAgent2D'
@@ -38,7 +41,7 @@ def main():
     internal_env = TrivialVacuumEnvironment2D(height=1, width=2)
     agent.initialize_internal_env(internal_env)
 
-    env = TrivialVacuumEnvironment2D(height=1, width=2)
+    env = PartiallyObservableTrivialVacuumEnvironment2D(height=1, width=2)
     env.add_thing(agent, (0, 1))
     env.add_thing(Dirt(), (0, 0))
     env.run()

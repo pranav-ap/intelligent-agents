@@ -1,5 +1,6 @@
 from core import Environment2D, Dirt, Direction, Agent
 from utils import Action
+from random import choice
 
 
 class VacuumEnvironment2D(Environment2D):
@@ -37,6 +38,25 @@ class TrivialVacuumEnvironment2D(VacuumEnvironment2D):
             self.display()
             for agent in self._get_all_things(kind=Agent):
                 percept = self._get_things_at(agent.location)
+                action = agent.decide_action(percept)
+                self._perform_action(agent, action)
+                print('{} performs {}'.format(agent, action))
+
+            step += 1
+
+        self.display()
+
+
+class PartiallyObservableTrivialVacuumEnvironment2D(VacuumEnvironment2D):
+    def __init__(self, height=3, width=3):
+        VacuumEnvironment2D.__init__(self, height=height, width=width)
+
+    def run(self, max_steps=20):
+        step = 0
+        while not self._is_all_clean() and step <= max_steps:
+            self.display()
+            for agent in self._get_all_things(kind=Agent):
+                percept = choice([self._get_things_at(agent.location), []])
                 action = agent.decide_action(percept)
                 self._perform_action(agent, action)
                 print('{} performs {}'.format(agent, action))
